@@ -4,20 +4,17 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 app.config['DEBUG'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://build-a-blog:1234@localhost:8889/build-a-blog'
-app.config['SQLALCHEMY_ECHO'] = True
-db = SQLAlchemy(app)
+app.config['SQLALCHEMY_ECHO'] = True #output in terminal 
+db = SQLAlchemy(app) #create db object
  
-
-class Blog(db.Model):
+class Blog(db.Model):     #create Blog class 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(120))
     body = db.Column(db.String(500))
 
-    def __init__(self, title, body):
+    def __init__(self, title, body): #constructor
         self.title = title
         self.body = body
-
-#blogs = []
 
 @app.route("/", methods=[ "GET"])
 def index():
@@ -29,17 +26,13 @@ def blog():
 
     blogs = Blog.query.all()
     return render_template('blog.html', title="Build A Blog", blogs=blogs)
-    
 
 @app.route("/blogpost", methods=["GET"])
 def blogpost():
 
     blog_id = request.args.get('id')
     blog = Blog.query.filter_by(id=blog_id).first()
-
     return render_template('blogpost.html', blog=blog)
-
-    
 
 @app.route("/newpost", methods=["POST", "GET"])    
 def newpost():
